@@ -1,4 +1,6 @@
-######################################################################
+import random
+
+#####################################################################
 #### Pokemon Classes
 ######################################################################
 
@@ -36,6 +38,7 @@ class Pokemon():
             print(f"{self.name} took too much damage and is knocked out! \n")
         else:
             print(f"{self.name} took {damage_amount} points of damage and has {self.health}/{self.max_health} remaining. \n")
+
     def add_health(self, hp):
         self.health += hp
         if self.health > self.max_health:
@@ -83,17 +86,33 @@ class Pokemon():
 ######################################################################
 
 class Trainer():
-    def __init__(self, name, team, items):
+    def __init__(self, name, team=[], items=[]):
         self.name = name
         self.team = team
         self.items = items
         self.current_pokemon = self.team[0]
 
     def __repr__(self):
-        return (f"Here are {self.name}'s current stats:\n"
+        return (f"\nHere are {self.name}'s current stats:\n"
                 "\n"
                 f"Team: {self.team}\n"
                 f"Items: {self.items}\n")
+
+    def add_to_team(self, list_of_pokemon):
+        addable_count = 6 - len(self.team)
+        going_to_add = list_of_pokemon[0:addable_count]
+        for pokemon in going_to_add:
+            self.team.append(pokemon)
+            print(f"{pokemon.name} was added to {self.name}'s team")
+        if len(self.team) + len(list_of_pokemon) > 6:
+            print("\nSorry, you can only have 6 pokemon on a team\n")
+            not_adding = list_of_pokemon[addable_count:]
+            for pokemon in not_adding:
+                print(f"{pokemon.name} was not added to {self.name}'s team")
+
+    def add_item(self, list_of_items):
+        for item in list_of_items:
+            self.items.append(item)
 
     def switch_pokemon(self, pokemon_one, pokemon_two):
         index_one = self.team.index(pokemon_one)
@@ -116,16 +135,40 @@ class Trainer():
         else:
             print(f'Sorry, {self.name} doensn\'t have a {item.lower()} to use.')
 
+    def battle(self, trainer):
+        self_current_pokemon = self.team[0]
+        opponent_current_pokemon = trainer.team[0]
+       # if random.randint(0, 2) == 1: #self makes choice first
+        if True == True:
+            x = input('''What would you like to do?\n
+            Attack
+            Use Item
+            Switch
+            Run''')
+            print(x)
+
+        if random.randint(0, 2) == 2:
+            #opponent makes choice first
+
+           # self_current_pokemon.attack(opponent_current_pokemon)
+        #turn based
+        #ask for input each turn (attack, switch, item, run)
+
+
 
 
 
 ######################################################################
 #### Item Classes
 ######################################################################
+
 class Item():
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
+    def __repr__(self):
+        return(self.name)
 
 class HealthPotion(Item):
     def use(self, pokemon):
@@ -134,10 +177,13 @@ class HealthPotion(Item):
         else:
             pokemon.add_health(self.value)
 
+class RevivePotion(Item):
+    def use(self, pokemon):
+        pokemon.revive()
 
-
-
-
+class Candy(Item):
+    def use(self, pokemon):
+        pokemon.level += 1
 
 
 
